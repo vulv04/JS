@@ -6,6 +6,5 @@ function printSquareNumber(n) {
     console.log(result.join(' '));
 }
 
-// Test cases
-printSquareNumber(10); // 4 9
-printSquareNumber(20); // 4 9 16
+printSquareNumber(10);
+printSquareNumber(20);

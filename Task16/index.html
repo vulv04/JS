@@ -1,11 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tính tiền taxi</title>
 </head>
+
 <body>
-    <script src="./index.js"></script>
+    <h2>Tính tiền taxi</h2>
+    <div id="output"></div>
+
+    <script>
+        let km = parseFloat(prompt("Nhập số km: "));
+
+        function taxiBill(km) {
+            let output = document.getElementById("output");
+            let total = 0;
+
+            if (km <= 0) {
+                output.innerHTML = "Số km không hợp lệ";
+            } else if (km <= 1) {
+                total = 10000;
+                output.innerHTML = "Số tiền cần trả: " + total.toLocaleString() + "đ";
+            } else if (km <= 10) {
+                total = 10000 + (km - 1) * 8200;
+                output.innerHTML = "Số tiền cần trả: " + total.toLocaleString() + "đ";
+            } else {
+                total = 10000 + 9 * 8200 + (km - 10) * 8000;
+                output.innerHTML = "Số tiền cần trả: " + total.toLocaleString() + "đ";
+            }
+        }
+
+        taxiBill(km);
+    </script>
 </body>
+
 </html>

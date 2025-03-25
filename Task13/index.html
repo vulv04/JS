@@ -1,14 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viết hàm in ra các số nguyên tố từ 2 đến n:</title>
+    <title>In ra các số nguyên tố</title>
 </head>
 
 <body>
-    <script src="./index.js"></script>
+    <h2>Các số nguyên tố từ 2 đến n</h2>
+    <div id="output"></div>
+
+    <script>
+        let n = parseInt(prompt("Nhập số nguyên dương n: "));
+
+        function printPrimeNumber(n) {
+            let output = document.getElementById("output");
+
+            if (isNaN(n) || n < 2) {
+                output.innerHTML = "Vui lòng nhập số nguyên dương lớn hơn hoặc bằng 2.";
+                return;
+            }
+
+            let primeNumbers = ""; // Chuỗi để lưu các số nguyên tố
+
+            for (let i = 2; i <= n; i++) {
+                let isPrime = true;
+
+                for (let j = 2; j <= Math.sqrt(i); j++) { // Tối ưu kiểm tra số nguyên tố
+                    if (i % j === 0) {
+                        isPrime = false;
+                        break;
+                    }
+                }
+
+                if (isPrime) {
+                    primeNumbers += i + " "; // Thêm số nguyên tố vào chuỗi
+                }
+            }
+
+            output.innerHTML = primeNumbers.length > 0
+                ? `Các số nguyên tố từ 2 đến ${n} là: <b>${primeNumbers.trim()}</b>`
+                : "Không có số nguyên tố nào trong khoảng này.";
+        }
+
+        printPrimeNumber(n);
+    </script>
 </body>
 
 </html>

@@ -1,11 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tìm số lớn nhất trong 3 số</title>
+    <title>Tìm số lớn nhất</title>
 </head>
+
 <body>
-    <script src="./index.js"></script>
+    <h2>Tìm số lớn nhất trong ba số</h2>
+    <div id="output"></div>
+
+    <script>
+        let a = parseFloat(prompt("Nhập số a: "));
+        let b = parseFloat(prompt("Nhập số b: "));
+        let c = parseFloat(prompt("Nhập số c: "));
+
+        function findMaxNumber(a, b, c) {
+            let output = document.getElementById("output");
+
+            if (isNaN(a) || isNaN(b) || isNaN(c)) {
+                output.innerHTML = "Vui lòng nhập số hợp lệ!";
+                return;
+            }
+
+            let max;
+            if (a >= b && a >= c) {
+                max = a;
+            } else if (b >= a && b >= c) {
+                max = b;
+            } else {
+                max = c;
+            }
+
+            output.innerHTML = `Số lớn nhất là: <b>${max}</b>`;
+        }
+
+        findMaxNumber(a, b, c);
+    </script>
 </body>
+
 </html>

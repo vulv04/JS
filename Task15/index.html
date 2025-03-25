@@ -1,11 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiểm tra số cùng dấu</title>
+    <title>Kiểm tra cùng dấu</title>
 </head>
+
 <body>
-    <script src="./index.js"></script>
+    <h2>Kiểm tra hai số có cùng dấu không</h2>
+    <div id="output"></div>
+
+    <script>
+        let a = parseFloat(prompt("Nhập số a: "));
+        let b = parseFloat(prompt("Nhập số b: "));
+
+        function isSameSign(a, b) {
+            return (a > 0 && b > 0) || (a < 0 && b < 0);
+        }
+
+        let output = document.getElementById("output");
+
+        if (isNaN(a) || isNaN(b)) {
+            output.innerHTML = "Vui lòng nhập số hợp lệ!";
+        } else if (isSameSign(a, b)) {
+            output.innerHTML = `Hai số ${a} và ${b} có cùng dấu.`;
+        } else {
+            output.innerHTML = `Hai số ${a} và ${b} không cùng dấu.`;
+        }
+    </script>
 </body>
+
 </html>

@@ -21,15 +21,14 @@
             } else if (km <= 1) {
                 total = 10000;
                 output.innerHTML = "Số tiền cần trả: " + total.toLocaleString() + "đ";
-            } else if (km >1 && km <= 30) {
+            } else if (km <= 10) {
                 total = 10000 + (km - 1) * 8000;
                 output.innerHTML = "Số tiền cần trả: " + total.toLocaleString() + "đ";
             } else {
-                total = 7000 + (km - 30) * 5000;
+                total = 10000 + 29 * 8000 + (km - 30) * 7000;
                 output.innerHTML = "Số tiền cần trả: " + total.toLocaleString() + "đ";
             }
         }
-
         taxiBill(km);
     </script>
 </body>

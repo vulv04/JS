@@ -14,6 +14,7 @@ function filterEvenNumbers(arr) {
 }
 
 // Test
+console.log("bai2")
 console.log(filterEvenNumbers([1, 2, 3, 4, 5, 6])); // Output: [2, 4, 6]
 console.log(filterEvenNumbers([1, 3, 5, 7])); // Output: []
 console.log(filterEvenNumbers([])); // Output: []
@@ -25,14 +26,13 @@ function filterLongStrings(arr) {
 }
 
 // Test
-console.log("bai2")
+console.log("bai3")
 console.log(filterLongStrings(["hello", "world", "javascript", "nodejs"])); // Output: ["javascript", "nodejs"]
 console.log(filterLongStrings(["hi", "hello world", "a b c", "goodbye!!"])); //Output: ["hello world", "goodbye!!"]
 console.log(filterLongStrings(["hi", "bye", "yes"])); //Output: []
 
 
 //Cho trước mảng chứa các số nguyên, viết hàm tìm:
-
 function isPrime(num) {
     if (num < 2) return false;
     for (let i = 2; i <= Math.sqrt(num); i++) {
@@ -67,19 +67,19 @@ function findMinMaxAverage(arr) {
     return { max, maxIndex, min, minIndex, primeAverage };
 }
 // Test cases
-console.log("bai3")
+console.log("bai4")
 console.log(findMinMaxAverage([3, 1, 4, 1, 5, 9, 2, 6])); // {max: 9, maxIndex: 5, min: 1, minIndex: 1, primeAverage: 3.25 }
 console.log(findMinMaxAverage([5, 5, 2, 2, 1])); // {max: 5, maxIndex: 0, min: 1, minIndex: 4, primeAverage: 3.5 }
 console.log(findMinMaxAverage([-3, 7, -8, 11, 0])); // {max: 11, maxIndex: 3, min: -8, minIndex: 2, primeAverage: 9 }
 
 
-//Viết hàm chèn số vào mảng mà không thay đổi thứ tự tăng dần của mảng.
+//  Viết hàm chèn số vào mảng mà không thay đổi thứ tự tăng dần của mảng.
 function insertNumber(arr, num) {
     if (typeof num !== "number" || isNaN(num)) return arr
         .filter(item => typeof item === "number" && !isNaN(item))
         .sort((a, b) => a - b);
 
-    // Lọc và sắp xếp mảng
+    //  Lọc và sắp xếp mảng
     let sortedArr = arr
         .filter(item => typeof item === "number" && !isNaN(item))
         .sort((a, b) => a - b);

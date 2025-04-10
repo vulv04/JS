@@ -11,7 +11,12 @@ const fruits = [
 ];
 
 function removeDuplicate(arr) {
-    return Array.from(new Set(arr));
+    return arr.reduce((acc, item) => {
+        if (!acc.includes(item)) {
+            acc.push(item);
+        }
+        return acc;
+    }, []);
 }
 
 // Output:

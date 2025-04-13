@@ -11,11 +11,17 @@ const orders = [
     { id: 9, amount: 350, date: "2025-04-09", status: "completed" },
     { id: 10, amount: 500, date: "2025-04-10", status: "completed" },
 ];
-function calculateTotalAmount(array, amount = 0) {
-    const completedOrders = array.filter((order) => order.status === "completed");
-    const totalAmount = completedOrders.reduce((sum, order) => sum + order.amount, amount);
-    return totalAmount;
+function calculateTotalCompletedAmount(array, amount) {
+    return array.reduce((acc, order) => {
+        if (order.status === "completed" && order.amount > amount) {
+            return acc + order.amount;
+        }
+        return acc;
+    }, 0);
 }
 // Output
-const result = calculateTotalAmount(orders);
-console.log(result);
+const result = calculateTotalCompletedAmount(orders, 150);
+console.log(result); // 850
+
+const result2 = calculateTotalCompletedAmount(orders, 100);
+console.log(result2); // 1120

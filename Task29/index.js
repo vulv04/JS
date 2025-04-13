@@ -13,10 +13,12 @@ const products = [
 ];
 
 function filteredProductNames(array, price) {
-    const filteredProducts = array.filter((product) => product.price <= price);
-    const productNames = filteredProducts.map((product) => product.name);
-    return productNames;
+  return array.reduce((acc, product) => {
+        if (product.price >= price) {
+            acc.push(product.name);
+        }
+        return acc;
+    }, []);
 }
 // Output
-const result = filteredProductNames(products, 200);
-console.log(result); // [ 'Laptop', 'Monitor', ''Headphones', 'Chair' ]
+console.log(filteredProductNames(products, 200));// [ 'Laptop', 'Monitor', ''Headphones', 'Chair' ]

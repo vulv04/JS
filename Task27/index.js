@@ -19,9 +19,10 @@ try {
     const result2 = arr2.reduce2((accumulator, value) => {
         return accumulator + value;
     });
-    console.log(result2);
-} catch (error) {
-    console.log(error.message); // Error: Reduce of empty array with no initial value
+    console.log(result2); // Error: Reduce of empty array with no initial value
+}
+catch (error) {
+    console.error(error.message); // Error: Reduce of empty array with no initial value
 }
 
 // Sample 3

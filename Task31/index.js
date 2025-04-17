@@ -7,6 +7,7 @@ function countTotalWords(arr) {
         const words = str.split(" ");
         return acc + words.length;
     }, 0);
+    
 }
 // Test
 console.log(countTotalWords(["Hello world", "JS is fun", "Arrays and strings"]))

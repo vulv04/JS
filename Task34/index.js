@@ -14,17 +14,15 @@ const users = [
 ];
 // Thực hiện viết hàm sortedUsers để sắp xếp người dùng theo bảng chữ cái
 function sortedUsers(arrayUser) {
-    function sortedUsers(arrayUser) {
-        return arrayUser.sort((a, b) => {
-            const nameA = a.fullname.split(" ").pop().toLowerCase();
-            const nameB = b.fullname.split(" ").pop().toLowerCase();
-            return nameA.localeCompare(nameB, 'vi');
-        });
-    }
-    return sortedUsers(arrayUser);
+  return arrayUser.sort((a, b) => {
+    const nameA = a.fullname.split(" ").pop().toLowerCase();
+    const nameB = b.fullname.split(" ").pop().toLowerCase();
+    return nameA.localeCompare(nameB, "vi");
+  });
 }
+
 // Test
-console.log(sortedUsers(users)); //
+console.log(sortedUsers(users));
 // [
 //   { fullname: "Tran Duc B", age: 32, address: "LangSon" },
 //   { fullname: "Tran Duc B", age: 32, address: "LangSon" },

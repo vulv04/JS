@@ -72,12 +72,20 @@
     <script>
         const questions = document.querySelectorAll('.accordion-question');
 
-        questions.forEach(question => {
-            question.addEventListener('click', () => {
-                const answer = question.nextElementSibling;
-                answer.classList.toggle('active');
+            questions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    document.querySelectorAll('.accordion-answer.active').forEach(activeAnswer => {
+                        if (activeAnswer !== answer)
+                        {
+                            activeAnswer.classList.remove('active');
+                        }
+                    });
+                    answer.classList.toggle('active');
+                });
             });
-        });
+
+
     </script>
 </body>
 

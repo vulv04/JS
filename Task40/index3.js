@@ -1,30 +1,4 @@
 // Bài 3
-function getUserPromise(userId) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ id: userId, name: "John", age: 30 });
-    }, 1000);
-  });
-}
-
-function getPurchasesPromise(userId) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        { id: 1, userId: userId, product: "Laptop", price: 1000 },
-        { id: 2, userId: userId, product: "Phone", price: 2000 },
-      ]);
-    }, 1000);
-  });
-}
-
-function getProductDetailsPromise(productId, productName, productPrice) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ id: productId, name: productName, price: productPrice });
-    }, 1000);
-  });
-}
 // Yêu cầu: Giải quyết bài toán 1 trên bằng async/await
 async function processUserData(userId) {
   const user = await new Promise((resolve) => {
@@ -38,7 +12,7 @@ async function processUserData(userId) {
     setTimeout(() => {
       resolve([
         { id: 1, userId: userId, product: "Laptop", price: 1000 },
-        { id: 2, userId: userId, product: "Phone", price: 2000 },
+        { id: 2, userId: userId, product: "Phone", price: 2000 },6
       ]);
     }, 1000);
   });

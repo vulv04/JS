@@ -170,99 +170,106 @@
         </div>
         <div class="filter-section">
             <button onclick="filterTodos('all')" class="active">Tất cả</button>
-            <button onclick="filterTodos('active')">Chưa hoàn thành</button>
+            <button onclick="filterTodos('active' )">Chưa hoàn thành</button>
             <button onclick="filterTodos('completed')">Hoàn thành</button>
         </div>
         <ul class="todo-list" id="todoList"></ul>
     </div>
     <ul class="todo-list" id="todoList"></ul>
     </div>
-</body>
-<script>
-    //     Yêu cầu:
-    // Hiển thị danh sách công việc.
-    // Có thể thêm, sưa, xóa công việc.
-    // Khi ấn vào công việc có thể toggle trạng thái hoàn thành.
-    // Có thể lọc công việc theo trạng thái.
-    // Sử dụng Local Storage để lưu danh sách công việc.
+    <script>
+        //     Yêu cầu:
+        // Hiển thị danh sách công việc.
+        // Có thể thêm, sưa, xóa công việc.
+        // Khi ấn vào công việc có thể toggle trạng thái hoàn thành.
+        // Có thể lọc công việc theo trạng thái.
+        // Sử dụng Local Storage để lưu danh sách công việc.
 
-    // Thuật toán xử lý logic của ứng dụng ở đây
-    let todos = JSON.parse(localStorage.getItem('todos')) || [];
-    const todoInput = document.getElementById('todoInput');
-    const todoList = document.getElementById('todoList');
-    const actionButton = document.getElementById('actionButton');
-    const errorMessage = document.getElementById('errorMessage');
+        // Thuật toán xử lý logic của ứng dụng ở đây
+        let todos = JSON.parse(localStorage.getItem('todos')) || [];
+        const todoInput = document.getElementById('todoInput');
+        const todoList = document.getElementById('todoList');
+        const actionButton = document.getElementById('actionButton');
+        const errorMessage = document.getElementById('errorMessage');
 
-    let currentEditIndex = -1; // Biến để lưu chỉ số công việc đang được chỉnh sửa
-    let currentFilter = 'all'; // Biến để lưu trạng thái lọc hiện tại
+        let currentEditIndex = -1; // Biến để lưu chỉ số công việc đang được chỉnh sửa
+        let currentFilter = 'all'; // Biến để lưu trạng thái lọc hiện tại
 
-    function renderTodos() {
-        todoList.innerHTML = ''; // Xóa danh sách hiện tại
-        todos.forEach((todo, index) => {
-            if (currentFilter === 'all' || (currentFilter === 'active' && !todo.completed) || (currentFilter === 'completed' && todo.completed)) {
-                const li = document.createElement('li');
-                li.className = 'todo-item';
-                li.innerHTML = `
-                    <span class="task-text ${todo.completed ? 'completed' : ''}">${todo.text}</span>
-                    <span class="status ${todo.completed ? 'completed' : 'active'}">${todo.completed ? 'Hoàn thành' : 'Chưa hoàn thành'}</span>
-                    <button class="edit" onclick="editTodo(${index})">Sửa</button>
-                    <button class="delete" onclick="deleteTodo(${index})">Xóa</button>
-                `;
-                li.querySelector('.status').onclick = () => toggleComplete(index);
-                todoList.appendChild(li);
+        function renderTodos() {
+            todoList.innerHTML = ''; // Xóa danh sách hiện tại
+            todos.forEach((todo, index) => {
+                if (currentFilter === 'all' || (currentFilter === 'active' && !todo.completed) || (currentFilter === 'completed' && todo.completed))
+                {
+                    const li = document.createElement('li');
+                    li.className = 'todo-item';
+                    li.innerHTML = `
+                        <span class="task-text ${todo.completed ? 'completed' : ''}">${todo.text}</span>
+                        <span class="status ${todo.completed ? 'completed' : 'active'}">${todo.completed ? 'Hoàn thành' : 'Chưa hoàn thành'}</span>
+                        <button class="edit" onclick="editTodo(${index})">Sửa</button>
+                        <button class="delete" onclick="deleteTodo(${index})">Xóa</button>
+                    `;
+                    li.querySelector('.status').onclick = () => toggleComplete(index);
+                    todoList.appendChild(li);
+                }
+            });
+        }
+
+        function addTodo() {
+            const todoText = todoInput.value.trim();
+            if (todoText === '')
+            {
+                errorMessage.style.display = 'block';
+                return;
+            } else
+            {
+                errorMessage.style.display = 'none';
             }
-        });
-    }
 
-    function addTodo() {
-        const todoText = todoInput.value.trim();
-        if (todoText === '') {
-            errorMessage.style.display = 'block'; 
-            return;
-        } else {
-            errorMessage.style.display = 'none'; 
+            if (currentEditIndex !== -1)
+            {
+                todos[currentEditIndex].text = todoText;
+                currentEditIndex = -1;
+                actionButton.textContent = 'Thêm';
+            } else
+            {
+                todos.push({ text: todoText, completed: false });
+            }
+
+            localStorage.setItem('todos', JSON.stringify(todos));
+            todoInput.value = '';
+            renderTodos();
         }
-
-        if (currentEditIndex !== -1) {
-            todos[currentEditIndex].text = todoText; 
-            currentEditIndex = -1; 
-            actionButton.textContent = 'Thêm';
-        } else {
-            todos.push({ text: todoText, completed: false });
+        function editTodo(index) {
+            todoInput.value = todos[index].text;
+            currentEditIndex = index;
+            actionButton.textContent = 'Cập nhật';
         }
-
-        localStorage.setItem('todos', JSON.stringify(todos)); 
-        todoInput.value = ''; 
-        renderTodos(); 
-    }
-    function editTodo(index) {
-        todoInput.value = todos[index].text;
-        currentEditIndex = index; 
-        actionButton.textContent = 'Cập nhật';
-    }
-    function deleteTodo(index) {
-        todos.splice(index, 1); // Xóa công việc theo chỉ số
-        localStorage.setItem('todos', JSON.stringify(todos));
-        renderTodos();
-    }
-    function toggleComplete(index) {
-        todos[index].completed = !todos[index].completed;
-        localStorage.setItem('todos', JSON.stringify(todos));
-        renderTodos();
-    }
-    function filterTodos(filter) {
-        currentFilter = filter;
+        function deleteTodo(index) {
+            todos.splice(index, 1); // Xóa công việc theo chỉ số
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+        }
+        function toggleComplete(index) {
+            todos[index].completed = !todos[index].completed;
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+        }
         const buttons = document.querySelectorAll('.filter-section button');
         buttons.forEach(button => {
-            button.classList.remove('active');
-            if (button.textContent === filter) {
+            button.addEventListener('click', () => {
+                buttons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-            }
+            });
         });
+        function filterTodos(filter) {
+            currentFilter = filter;
+            renderTodos();
+        }
+        // Gọi hàm renderTodos để hiển thị danh sách công việc khi trang được tải
         renderTodos();
-    }
-    document.addEventListener('DOMContentLoaded', renderTodos);
 
-</script>
+    </script>
+</body>
+
 
 </html>

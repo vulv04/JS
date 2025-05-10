@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Quản lý sinh viên</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h2>Quản lý sinh viên</h2>
+        <form id="formAdd" class="mb-3">
+            <div class="row g-2">
+                <div class="col"><input type="text" id="name" class="form-control" placeholder="Tên sinh viên"
+                        required /></div>
+                <div class="col"><input type="number" id="math" class="form-control" placeholder="Toán" required />
+                </div>
+                <div class="col"><input type="number" id="english" class="form-control" placeholder="Tiếng Anh"
+                        required /></div>
+                <div class="col"><input type="number" id="science" class="form-control" placeholder="Khoa học"
+                        required /></div>
+                <div class="col"><button type="submit" class="btn btn-primary" id="btn">Thêm sinh viên</button></div>
+            </div>
+            <div id="errorMessage" class="text-danger mt-2"></div>
+        </form>
+
+        <div class="row mb-3">
+            <div class="col-md-4"><input type="text" id="searchInput" class="form-control"
+                    placeholder="Tìm kiếm theo tên" /></div>
+            <div class="col-md-4">
+                <select id="filterSelect" class="form-select">
+                    <option value="">Lọc theo xếp loại</option>
+                    <option value="Giỏi">Giỏi</option>
+                    <option value="Khá">Khá</option>
+                    <option value="Trung bình">Trung bình</option>
+                    <option value="Yếu">Yếu</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select id="sortSelect" class="form-select">
+                    <option value="">Sắp xếp</option>
+                    <option value="asc">Điểm tăng dần</option>
+                    <option value="desc">Điểm giảm dần</option>
+                </select>
+            </div>
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên</th>
+                    <th>Toán</th>
+                    <th>Tiếng Anh</th>
+                    <th>Khoa học</th>
+                    <th>Trung bình</th>
+                    <th>Xếp loại</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const name = document.getElementById("name");
+        const math = document.getElementById("math");
+        const english = document.getElementById("english");
+        const science = document.getElementById("science");
+        const search = document.getElementById("searchInput");
+        const filter = document.getElementById("filterSelect");
+        const sort = document.getElementById("sortSelect");
+        const btn = document.getElementById("btn");
+        const body = document.getElementById("body");
+        const errorMessage = document.getElementById("errorMessage");
+        const formAdd = document.getElementById("formAdd");
+
+        function generateID(length) {
+            let characters = "0123456789";
+            let id = "student-";
+            for (let i = 0; i < length; i++)
+            {
+                id += characters[Math.floor(Math.random() * characters.length)];
+            }
+            return id;
+        }
+
+        function getData() {
+            return JSON.parse(localStorage.getItem("students") || "[]");
+        }
+
+        function setData(student) {
+            localStorage.setItem("students", JSON.stringify(student));
+        }
+
+        function averageMark(student) {
+            return ((+student.math + +student.english + +student.science) / 3).toFixed(2);
+        }
+
+        function rank(student) {
+            let avg = averageMark(student);
+            if (avg >= 8) return "Giỏi";
+            if (avg >= 6.5) return "Khá";
+            if (avg >= 5) return "Trung bình";
+            return "Yếu";
+        }
+
+        function render(students = []) {
+            if (!Array.isArray(students))
+            {       
+                errorMessage.innerText = "Lỗi định dạng dữ liệu";
+                return;
+            }
+            if (students.length === 0)
+            {
+                body.innerHTML = `<tr><td colspan="8" class="text-center">Không có dữ liệu</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = "";
+            students.forEach((student) => {
+                const avg = averageMark(student);
+                const studentRank = rank(student);
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+          <td>${student.id}</td>
+          <td>${student.name}</td>
+          <td>${student.math}</td>
+          <td>${student.english}</td>
+          <td>${student.science}</td>
+          <td>${avg}</td>
+          <td>${studentRank}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" onclick="removeStudent('${student.id}')">Xoá</button>
+            <button class="btn btn-success btn-sm" onclick="edit('${student.id}')">Cập nhật</button>
+          </td>
+        `;
+                body.appendChild(tr);
+            });
+        }
+
+        function validate() {
+            if (!name.value.trim() || !math.value || !english.value || !science.value)
+            {
+                errorMessage.innerText = "Vui lòng nhập đầy đủ thông tin";
+                return false;
+            }
+            if ([math, english, science].some((field) => field.value < 0 || field.value > 10))
+            {
+                errorMessage.innerText = "Điểm phải từ 0 đến 10";
+                return false;
+            }
+            return true;
+        }
+
+        function addStudent(event) {
+            event.preventDefault();
+            if (!validate()) return;
+
+            const students = getData();
+            const student = {
+                id: generateID(3),
+                name: name.value.trim(),
+                math: math.value,
+                english: english.value,
+                science: science.value,
+            };
+
+            setData([student, ...students]);
+            render(getData());
+            formAdd.reset();
+            errorMessage.innerText = "";
+        }
+
+        function removeStudent(id) {
+            if (!confirm("Bạn có chắc chắn muốn xoá không?")) return;
+            const students = getData().filter((s) => s.id !== id);
+            setData(students);
+            render(students);
+        }
+
+        function edit(id) {
+            const students = getData();
+            const student = students.find((s) => s.id === id);
+            if (!student)
+            {
+                errorMessage.innerText = "Không tìm thấy sinh viên";
+                return;
+            }
+
+            name.value = student.name;
+            math.value = student.math;
+            english.value = student.english;
+            science.value = student.science;
+            name.setAttribute("readonly", true);
+            btn.innerText = "Cập nhật";
+
+            btn.onclick = function () {
+                if (validate())
+                {
+                    const updatedStudent = {
+                        ...student,
+                        math: math.value,
+                        english: english.value,
+                        science: science.value,
+                    };
+                    const updatedList = students.map((s) => (s.id === id ? updatedStudent : s));
+                    setData(updatedList);
+                    render(updatedList);
+                    btn.innerText = "Thêm sinh viên";
+                    name.removeAttribute("readonly");
+                    formAdd.reset();
+                    btn.onclick = null;
+                    errorMessage.innerText = "";
+                }
+            };
+        }
+
+        function searchStudents() {
+            const searchVal = search.value.toLowerCase();
+            const students = getData().filter((s) =>
+                s.name.toLowerCase().includes(searchVal)
+            );
+            render(students);
+        }
+
+        function filterStudents() {
+            const value = filter.value;
+            const students = getData();
+            if (!value)
+            {
+                render(students);
+            } else
+            {
+                render(students.filter((s) => rank(s) === value));
+            }
+        }
+
+        function sortStudents() {
+            const value = sort.value;
+            const students = getData();
+            if (value === "asc")
+            {
+                students.sort((a, b) => averageMark(a) - averageMark(b));
+            } else if (value === "desc")
+            {
+                students.sort((a, b) => averageMark(b) - averageMark(a));
+            }
+            render(students);
+        }
+
+        formAdd.addEventListener("submit", addStudent);
+        search.addEventListener("input", searchStudents);
+        filter.addEventListener("change", filterStudents);
+        sort.addEventListener("change", sortStudents);
+
+        render(getData());
+    </script>
+</body>
+
+</html>

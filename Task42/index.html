@@ -14,12 +14,13 @@
             <div class="row g-2">
                 <div class="col"><input type="text" id="name" class="form-control" placeholder="Tên sinh viên"
                         required /></div>
-                <div class="col"><input type="number" id="math" class="form-control" placeholder="Toán" required />
+                <div class="col"><input type="number" id="math" class="form-control" placeholder="Toán" required
+                        min="0" />
                 </div>
-                <div class="col"><input type="number" id="english" class="form-control" placeholder="Tiếng Anh"
-                        required /></div>
-                <div class="col"><input type="number" id="science" class="form-control" placeholder="Khoa học"
-                        required /></div>
+                <div class="col"><input type="number" id="english" class="form-control" placeholder="Tiếng Anh" required
+                        min="0" /></div>
+                <div class="col"><input type="number" id="science" class="form-control" placeholder="Khoa học" required
+                        min="0" /></div>
                 <div class="col"><button type="submit" class="btn btn-primary" id="btn">Thêm sinh viên</button></div>
             </div>
             <div id="errorMessage" class="text-danger mt-2"></div>
@@ -108,7 +109,7 @@
 
         function render(students = []) {
             if (!Array.isArray(students))
-            {       
+            {
                 errorMessage.innerText = "Lỗi định dạng dữ liệu";
                 return;
             }

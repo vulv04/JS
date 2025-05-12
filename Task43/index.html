@@ -123,15 +123,16 @@
     </div>
 
     <script>
+        let allProducts = []; // lưu toàn bộ sản phẩm ban đầu
         let products = [];
         let currentPage = 1;
         let itemsPerPage = 6;
-        let sortAsc = true;
 
-        async function fetchProducts(url = 'https://dummyjson.com/products') {
-            const res = await fetch(url);
+        async function fetchProducts() {
+            const res = await fetch('https://dummyjson.com/products'); // lấy nhiều sản phẩm
             const data = await res.json();
-            products = data.products;
+            allProducts = data.products;
+            products = [...allProducts]; // sao chép
             currentPage = 1;
             renderProducts();
         }
@@ -161,10 +162,21 @@
         }
 
         function handleSearch() {
-            const q = document.getElementById("searchInput").value;
-            if (!q.trim()) return;
-            fetchProducts(`https://dummyjson.com/products/search?q=${q}`);
-        }
+                const q = document.getElementById("searchInput").value.trim().toLowerCase();
+                if (!q)
+                {
+                    products = [...allProducts]; // nếu ô trống thì trả về tất cả
+                } else
+                {
+                    products = allProducts.filter(product =>
+                        product.title.toLowerCase().startsWith(q)
+                    );
+                }
+                currentPage = 1;
+                renderProducts();
+            }
+
+
         function sortBySelect() {
             const sortValue = document.getElementById("sortSelect").value;
             if (sortValue === "asc")
@@ -176,6 +188,7 @@
             }
             renderProducts();
         }
+
         function changePage(direction) {
             const totalPages = Math.ceil(products.length / itemsPerPage);
             if (direction === -1 && currentPage > 1)
@@ -190,6 +203,7 @@
 
         fetchProducts();
     </script>
+
 </body>
 
 </html>

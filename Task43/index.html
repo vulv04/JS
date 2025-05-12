@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Search</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        .search-bar input {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+
+        }
+
+        .products {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+
+        }
+
+        .product {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 8px;
+            width: calc(33.333% - 20px);
+            box-sizing: border-box;
+            text-align: center;
+
+        }
+
+        .product img {
+            width: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+            height: 200px;
+            margin-bottom: 10px;
+
+        }
+
+        .product h3 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+        }
+
+        .product p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .buttons {
+            margin-top: 10px;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+
+        }
+
+        a {
+            text-decoration: none;
+            color: blue;
+
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        select {
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-left: 10px;
+        }
+
+        option {
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm..." />
+        <button onclick="handleSearch()">Tìm kiếm</button>
+        <label>Sắp xếp theo giá:
+        </label>
+        <select id="sortSelect" onchange="sortBySelect()">
+            <option value="">-- Chọn --</option>
+            <option value="asc">Tăng dần</option>
+            <option value="desc">Giảm dần</option>
+        </select>
+
+        <p id="viewCount"></p>
+    </div>
+
+    <div id="products" class="products"></div>
+    <div class="pagination">
+        <button onclick="changePage(-1)">Trang trước</button>
+        <button onclick="changePage(1)">Trang sau</button>
+    </div>
+
+    <script>
+        let products = [];
+        let currentPage = 1;
+        let itemsPerPage = 6;
+        let sortAsc = true;
+
+        async function fetchProducts(url = 'https://dummyjson.com/products') {
+            const res = await fetch(url);
+            const data = await res.json();
+            products = data.products;
+            currentPage = 1;
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedProducts = products.slice(start, end);
+
+            const productContainer = document.getElementById("products");
+            productContainer.innerHTML = "";
+
+            paginatedProducts.forEach(product => {
+                const productDiv = document.createElement("div");
+                productDiv.className = "product";
+                productDiv.innerHTML = `
+                    <img src="${product.images}" alt="${product.title}" />
+                    <h3>${product.title}</h3>
+                    <p>Giá: $${product.price}</p>
+                    <p>Thương hiệu: ${product.brand}</p>
+                    <p><a href="detail.html?id=${product.id}">Xem chi tiết</a></p>
+                `;
+                productContainer.appendChild(productDiv);
+            });
+
+            document.getElementById("viewCount").innerText = `Hiện ${products.length} sản phẩm`;
+        }
+
+        function handleSearch() {
+            const q = document.getElementById("searchInput").value;
+            if (!q.trim()) return;
+            fetchProducts(`https://dummyjson.com/products/search?q=${q}`);
+        }
+        function sortBySelect() {
+            const sortValue = document.getElementById("sortSelect").value;
+            if (sortValue === "asc")
+            {
+                products.sort((a, b) => a.price - b.price);
+            } else if (sortValue === "desc")
+            {
+                products.sort((a, b) => b.price - a.price);
+            }
+            renderProducts();
+        }
+        function changePage(direction) {
+            const totalPages = Math.ceil(products.length / itemsPerPage);
+            if (direction === -1 && currentPage > 1)
+            {
+                currentPage--;
+            } else if (direction === 1 && currentPage < totalPages)
+            {
+                currentPage++;
+            }
+            renderProducts();
+        }
+
+        fetchProducts();
+    </script>
+</body>
+
+</html>

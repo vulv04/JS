@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi tiết sản phẩm</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .product-detail {
+            display: flex;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            gap: 20px;
+            margin-top: 50px;
+
+            /* Thêm khoảng cách giữa hình ảnh và thông tin */
+        }
+
+        .product-detail img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex: 1;
+        }
+
+        .product-detail h1 {
+            margin: 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .product-detail p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .product-detail .description {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <a class="back-link" href="index.html">&larr; Quay lại danh sách</a>
+    <div class="product-detail" id="productDetail">
+        <p>Đang tải dữ liệu...</p>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+
+        async function fetchProductDetail(productId) {
+            try
+            {
+                const res = await fetch(`https://dummyjson.com/products/${productId}`);
+                const data = await res.json();
+
+                document.getElementById("productDetail").innerHTML = `
+                    <img src="${data.thumbnail}" alt="${data.title}" />
+                    <div class="product-info">
+                        <h1>${data.title}</h1>
+                        <p><strong>Giá:</strong> $${data.price}</p>
+                        <div class="description">
+                            <p><strong>Mô tả:</strong> ${data.description}</p>
+                            <p><strong>Thương hiệu:</strong> ${data.brand}</p>
+                            <p><strong>Loại:</strong> ${data.category}</p>
+                            <p><strong>Đánh giá:</strong> ${data.rating} / 5</p>
+                        </div>
+                    </div>
+                `;
+            } catch (error)
+            {
+                document.getElementById("productDetail").innerHTML = "<p>Không thể tải dữ liệu sản phẩm.</p>";
+            }
+        }
+
+        if (id)
+        {
+            fetchProductDetail(id);
+        } else
+        {
+            document.getElementById("productDetail").innerHTML = "<p>Không tìm thấy ID sản phẩm.</p>";
+        }
+    </script>
+</body>
+
+</html>

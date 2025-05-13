@@ -149,7 +149,7 @@
                 const productDiv = document.createElement("div");
                 productDiv.className = "product";
                 productDiv.innerHTML = `
-                    <a href="detail.html?id=${product.id}"><img src="${product.images}" alt="${product.title}" /></a>
+                    <a href="detail.html?id=${product.id}"><img src="${product.thumbnail}" alt="${product.title}" /></a>
                     <h3>${product.title}</h3>
                     <p>Giá: $${product.price}</p>
                     <p>Thương hiệu: ${product.brand}</p>

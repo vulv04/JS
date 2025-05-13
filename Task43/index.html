@@ -109,7 +109,7 @@
         </label>
         <select id="sortSelect" onchange="sortBySelect()">
             <option value="">-- Chọn --</option>
-            <option value="asc">Tăng dần</option>
+            <option value="asc">Tăng giảm</option>
             <option value="desc">Giảm dần</option>
         </select>
 
@@ -161,21 +161,32 @@
             document.getElementById("viewCount").innerText = `Hiện ${products.length} sản phẩm`;
         }
 
-        function handleSearch() {
-                const q = document.getElementById("searchInput").value.trim().toLowerCase();
-                if (!q)
+        async function handleSearch() {
+            const q = document.getElementById("searchInput").value.trim().toLowerCase();
+
+            if (!q)
+            {
+                // Nếu không có từ khóa, tải lại tất cả sản phẩm
+                const res = await fetch('https://dummyjson.com/products');
+                const data = await res.json();
+                products = data.products;
+            } else
+            {
+                try
                 {
-                    products = [...allProducts]; // nếu ô trống thì trả về tất cả
-                } else
+                    const res = await fetch(`https://dummyjson.com/products/search?q=${q}`);
+                    const data = await res.json();
+                    products = data.products;
+                } catch (error)
                 {
-                    products = allProducts.filter(product =>
-                        product.title.toLowerCase().startsWith(q)
-                    );
+                    console.error("Lỗi khi tìm kiếm sản phẩm:", error);
+                    products = [];
                 }
-                currentPage = 1;
-                renderProducts();
             }
 
+            currentPage = 1;
+            renderProducts();
+        }
 
         function sortBySelect() {
             const sortValue = document.getElementById("sortSelect").value;
